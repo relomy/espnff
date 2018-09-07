@@ -10,8 +10,8 @@ class Team(object):
         self.losses = data['record']['overallLosses']
         self.points_for = data['record']['pointsFor']
         self.points_against = data['record']['pointsAgainst']
-        self.owner = "%s %s" % (data['owners'][0]['firstName'],
-                                data['owners'][0]['lastName'])
+        self.owner = "%s %s" % (data['owners'][0].get('firstName', ''),
+                                data['owners'][0].get('lastName', ''))
         self.schedule = []
         self.scores = []
         self.mov = []
