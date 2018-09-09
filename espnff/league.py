@@ -115,8 +115,11 @@ class League(object):
     def _fetch_settings(self, data):
         self.settings = Settings(data)
 
-    def power_rankings(self, week):
+    def power_rankings(self, week=None):
         '''Return power rankings for any week'''
+        # check if week is none
+        if week is None:
+            week = self.get_current_week()
 
         # calculate win for every week
         win_matrix = []
@@ -133,6 +136,30 @@ class League(object):
         dominance_matrix = two_step_dominance(win_matrix)
         power_rank = power_points(dominance_matrix, teams_sorted, week)
         return power_rank
+
+    def get_current_week(self):
+        '''Return current week'''
+        params = {
+            'leagueId': self.league_id,
+            'seasonId': self.year
+        }
+
+        r = requests.get('%sscoreboard' % (self.ENDPOINT, ), params=params)
+        self.status = r.status_code
+        data = r.json()
+
+        if self.status == 401:
+            raise PrivateLeagueException(data['error'][0]['message'])
+
+        elif self.status == 404:
+            raise InvalidLeagueException(data['error'][0]['message'])
+
+        elif self.status != 200:
+            raise UnknownLeagueException('Unknown %s Error' % self.status)
+
+        week = data['scoreboard']['scoringPeriodId']
+
+        return week
 
     def scoreboard(self, week=None):
         '''Returns list of matchups for a given week'''
