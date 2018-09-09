@@ -19,3 +19,11 @@ class Player(object):
 
     def __repr__(self):
         return 'Player(%s)' % (self.first_name + " " + self.last_name + " " + str(self.player_id),)
+
+    def attr_list(self, should_print=False):
+
+        items = self.__dict__.items()
+        if should_print:
+            [print(f"attribute: {k}    value: {v}") for k, v in items]
+
+        return items

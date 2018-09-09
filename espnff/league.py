@@ -38,7 +38,7 @@ class League(object):
                 'SWID': self.swid
             }
 
-        r = requests.get('%sleagueSettings' % (self.ENDPOINT, ), params=params, cookies=cookies)
+        r = requests.get('{0}leagueSettings'.format(self.ENDPOINT), params=params, cookies=cookies)
         self.status = r.status_code
         data = r.json()
 
