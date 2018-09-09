@@ -23,5 +23,7 @@ class Player(object):
     def attr_list(self, should_print=False):
         items = self.__dict__.items()
         if should_print:
-            [print(f"attribute: {k:20s} : {v}") for k, v in items]
+            # [print(f"attribute: {k:20s} : {v}") for k, v in items]
+            for k, v in items:
+                print("attribute: {0:20s} : {1}".format(k, v))
         return items
