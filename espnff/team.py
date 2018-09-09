@@ -43,52 +43,52 @@ class Team(object):
             self.scores.append(score)
             self.schedule.append(opponentId)
 
-    def get_roster(self, week=None):
-        '''Get roster for a given week'''
-        params = {
-            'leagueId': self.league_id,
-            'seasonId': self.year,
-            'teamIds': self.team_id
-        }
-        roster_slots = {0: 'QB', 2: 'RB', 4: 'WR', 6: 'TE', 23: 'FLEX', 16: 'D/ST', 17: 'K', 20: 'Bench'}
-
-        if week is not None:
-            params['scoringPeriodId'] = week
-
-        r = requests.get('%srosterInfo' % (self.ENDPOINT, ), params=params, cookies=self.cookies)
-        data = r.json()
-
-        players = data['leagueRosters']['teams'][0]['slots']
-        roster = []
-        for p in players:
-            if 'player' in p:
-                player_name = ('%s %s' % (p['player']['firstName'], p['player']['lastName']))
-                position = roster_slots[p['slotCategoryId']]
-                player_id = p['player']['playerId']
-                params = {
-                    'leagueId': self.league_id,
-                    'seasonId': self.year,
-                    'teamIds': self.team_id,
-                    'playerId': player_id,
-                    'useCurrentPeriodRealStats': 'true',
-                    'useCurrentPeriodProjectedStats': 'true'
-                }
-                if week is not None:
-                    params['scoringPeriodId'] = week
-                r = requests.get('%splayerInfo' % (self.ENDPOINT, ), params=params, cookies=self.cookies)
-                data = r.json()
-                if 'appliedStatTotal' in data['playerInfo']['players'][0]['currentPeriodRealStats']:
-                    player_score = data['playerInfo']['players'][0]['currentPeriodRealStats']['appliedStatTotal']
-                else:
-                    player_score = 0
-                if 'appliedStatTotal' in data['playerInfo']['players'][0]['currentPeriodProjectedStats']:
-                    projected_score = data['playerInfo']['players'][0]['currentPeriodProjectedStats']['appliedStatTotal']
-                else:
-                    projected_score = 0
-                roster.append({
-                    'name': player_name,
-                    'position': position,
-                    'player_id': player_id,
-                    'actual_score': player_score,
-                    'projected_score': projected_score})
-        return roster
+    # def get_roster(self, week=None):
+    #     '''Get roster for a given week'''
+    #     params = {
+    #         'leagueId': self.league_id,
+    #         'seasonId': self.year,
+    #         'teamIds': self.team_id
+    #     }
+    #     roster_slots = {0: 'QB', 2: 'RB', 4: 'WR', 6: 'TE', 23: 'FLEX', 16: 'D/ST', 17: 'K', 20: 'Bench'}
+    #
+    #     if week is not None:
+    #         params['scoringPeriodId'] = week
+    #
+    #     r = requests.get('%srosterInfo' % (self.ENDPOINT, ), params=params, cookies=self.cookies)
+    #     data = r.json()
+    #
+    #     players = data['leagueRosters']['teams'][0]['slots']
+    #     roster = []
+    #     for p in players:
+    #         if 'player' in p:
+    #             player_name = ('%s %s' % (p['player']['firstName'], p['player']['lastName']))
+    #             position = roster_slots[p['slotCategoryId']]
+    #             player_id = p['player']['playerId']
+    #             params = {
+    #                 'leagueId': self.league_id,
+    #                 'seasonId': self.year,
+    #                 'teamIds': self.team_id,
+    #                 'playerId': player_id,
+    #                 'useCurrentPeriodRealStats': 'true',
+    #                 'useCurrentPeriodProjectedStats': 'true'
+    #             }
+    #             if week is not None:
+    #                 params['scoringPeriodId'] = week
+    #             r = requests.get('%splayerInfo' % (self.ENDPOINT, ), params=params, cookies=self.cookies)
+    #             data = r.json()
+    #             if 'appliedStatTotal' in data['playerInfo']['players'][0]['currentPeriodRealStats']:
+    #                 player_score = data['playerInfo']['players'][0]['currentPeriodRealStats']['appliedStatTotal']
+    #             else:
+    #                 player_score = 0
+    #             if 'appliedStatTotal' in data['playerInfo']['players'][0]['currentPeriodProjectedStats']:
+    #                 projected_score = data['playerInfo']['players'][0]['currentPeriodProjectedStats']['appliedStatTotal']
+    #             else:
+    #                 projected_score = 0
+    #             roster.append({
+    #                 'name': player_name,
+    #                 'position': position,
+    #                 'player_id': player_id,
+    #                 'actual_score': player_score,
+    #                 'projected_score': projected_score})
+    #     return roster
