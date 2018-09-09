@@ -92,6 +92,3 @@ class Team(object):
                     'actual_score': player_score,
                     'projected_score': projected_score})
         return roster
-
-        roster = None
-        return roster
